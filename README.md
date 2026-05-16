@@ -73,7 +73,7 @@ To replicate the dataset used in this analysis, download the full datasets
 all_partyposthesen.csv = party answers; 
 all_voterpos.rds = user answers;
 
-) from the link above and filter by the gmd_name (Saarbrücken/Halle) column to extract the relevant subset.
+from the link above and filter by the gmd_name (Saarbrücken/Halle) column to extract the relevant subset.
 
 ---
 
