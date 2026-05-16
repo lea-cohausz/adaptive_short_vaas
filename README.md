@@ -68,8 +68,7 @@ Dataset: doi:10.7910/DVN/PAH9O1
 Harvard Dataverse. https://doi.org/10.7910/DVN/PAH9O1
 
 Replication Instructions
-To replicate the dataset used in this analysis, download the full dataset from the link above and filter by the gmd_name (Saarbrücken/Halle) column to extract the relevant subset. For example, using Python:
-
+To replicate the dataset used in this analysis, download the full dataset from the link above and filter by the gmd_name (Saarbrücken/Halle) column to extract the relevant subset.
 ---
 
 ## Running the main experiment
