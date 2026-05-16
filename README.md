@@ -1,4 +1,4 @@
-# Adaptive Questionnaire Experiment (adaptive_v2)
+# Adaptive Questionnaire Experiment 
 
 Adaptive questionnaire simulation for political party matching (Saarbrücken/Halle dataset).
 The system selects items intelligently, predicts missing responses, and evaluates
