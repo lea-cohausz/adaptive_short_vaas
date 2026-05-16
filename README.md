@@ -60,7 +60,15 @@ Three CSV files must be present (paths can be overridden via CLI flags):
 | Party scores | `data/saar_party_ready_for_experiments.csv` | 5 224 persons × 13 cols (`id` + 6 parties × {res, acc}) |
 | Party positions | `data/Saarbru_prepared_Party.csv` | 6 parties × 42 cols (`party` + item positions 0–4) |
 
-These files are **not included** in the repository and must be obtained separately. 
+These files are **not included** in the repository and must be obtained separately.
+
+The data used in this project was obtained from the Harvard Dataverse:
+
+Dataset: doi:10.7910/DVN/PAH9O1
+Harvard Dataverse. https://doi.org/10.7910/DVN/PAH9O1
+
+Replication Instructions
+To replicate the dataset used in this analysis, download the full dataset from the link above and filter by the gmd_name (Saarbrücken/Halle) column to extract the relevant subset. For example, using Python:
 
 ---
 
