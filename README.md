@@ -30,10 +30,20 @@ project/
 │   ├── run_pred_stopping_experiment.py
 │   └── make_plots.py             # Regenerate plots from saved CSVs
 │
-└── data/
+├── prepare_data.py               # ← DATA PREPARATION entry point
+│
+├── Data/                         # Raw input files (not included in repo)
+│   ├── Saarbrücken0503.csv       # Raw Saarbrücken voter responses
+│   ├── Halle0503.csv             # Raw Halle voter responses
+│   └── all_partyposthesen.csv    # Party positions for all cities
+│
+└── data/                         # Prepared files (output of prepare_data.py)
     ├── saar_item_ready_for_experiments.csv
     ├── saar_party_ready_for_experiments.csv
-    └── Saarbru_prepared_Party.csv
+    ├── Saarbru_prepared_Party.csv
+    ├── halle_item_ready_for_experiments.csv
+    |── halle_party_ready_for_experiments.csv
+    ├── Halle_prepared_Party.csv
 ```
 
 ---
@@ -50,17 +60,11 @@ pip install numpy pandas scikit-learn matplotlib
 
 ---
 
-## Data files needed
+---
 
-Three CSV files must be present (paths can be overridden via CLI flags):
+## Raw data files needed
 
-| File | Default path | Description |
-|---|---|---|
-| Item responses | `data/saar_item_ready_for_experiments.csv` | 5 224 persons × 38 cols (`id` + 37 items, values 0–4) |
-| Party scores | `data/saar_party_ready_for_experiments.csv` | 5 224 persons × 13 cols (`id` + 6 parties × {res, acc}) |
-| Party positions | `data/Saarbru_prepared_Party.csv` | 6 parties × 42 cols (`party` + item positions 0–4) |
-
-These files are **not included** in the repository and must be obtained separately.
+Three raw CSV files are required as input to `prepare_data.py`. They are not included in the repository and must be obtained separately.
 
 The data used in this project was obtained from the Harvard Dataverse:
 
@@ -75,9 +79,43 @@ all_voterpos.rds = user answers;
 
 from the link above and filter by the gmd_name (Saarbrücken/Halle) column to extract the relevant subset.
 
+| File | Default path | Description |
+|---|---|---|
+| Saarbrücken responses | `Data/Saarbrücken0503.csv` | Raw voter responses (long format: `voteID`, `these_id`, `voterpos`) |
+| Halle responses | `Data/Halle0503.csv` | Raw voter responses (same format) |
+| Party positions | `Data/all_partyposthesen.csv` | Party positions for all cities (`gmd_name`, `party`, `these_id`, `partypos`) |
+
+---
+
+## Step 1 — Prepare the data
+
+Run this once before any experiment. It reshapes the raw data, computes party match scores, and writes all files the experiment pipeline expects into `data/`.
+
+```bash
+python prepare_data.py \
+    --saar-responses   Data/Saarbrücken0503.csv \
+    --halle-responses  Data/Halle0503.csv \
+    --party-positions  Data/all_partyposthesen.csv \
+    --out-dir          data/
+```
+
+This produces:
+
+```
+data/
+├── saar_item_ready_for_experiments.csv    # 5 224 voters × 37 items (0–4 scale)
+├── saar_party_ready_for_experiments.csv   # 5 224 voters × 6 parties × {res, acc}
+├── Saarbru_prepared_Party.csv             # 6 parties × item positions (0–4)
+├── halle_item_ready_for_experiments.csv   # Halle voters × items
+|── halle_party_ready_for_experiments.csv  # Halle voters × parties
+├── Saarbru_prepared_Party.csv             ## Halle parties x items
+```
+
 ---
 
 ## Running the main experiment
+
+To run the main experiments for the Saarbrücken dataset (Halle works analogously:
 
 ```bash
 python adaptive_v2/src/run_experiment.py \
@@ -221,13 +259,9 @@ plots without re-running the simulation.
 
 ## What is missing to run the experiments
 
-1. **Data files** — the three CSVs listed under *Data files needed* above are not
-   included. Without them nothing will run.
+1. **Raw data files** — the CSVs listed under *Raw data files needed* above are not included. Run `prepare_data.py` first once you have them.
 
-2. **Project root on `PYTHONPATH`** — the scripts assume they are run from the
-   project root (the directory that contains both `src/` and `adaptive_v2/`).
-   Running from a different working directory will cause import errors. Either
-   `cd` to the project root before running, or set:
+2. **Project root on `PYTHONPATH`** — the scripts assume they are run from the project root (the directory that contains both `src/` and `adaptive_v2/`). Running from a different working directory will cause import errors. Either `cd` to the project root before running, or set:
 
    ```bash
    export PYTHONPATH=/path/to/project/root:$PYTHONPATH
